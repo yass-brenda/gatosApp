@@ -4,7 +4,7 @@ import java.io.IOException;
 public class Principal {
     public static void main(String[] args) throws IOException {
         int opcionMenu = -1;
-        String[] botones = {"1. Ver gatos ", "2.Salir"};
+        String[] botones = {"1. Ver gatos ", "2.Ver favoritos", "3.Salir"};
 
         do{
             // menu principal
@@ -21,6 +21,10 @@ public class Principal {
            switch (opcionMenu){
                case 0:
                    GatosServices.verGatos();
+                   break;
+               case 1:
+                   Gatos gato = new Gatos();
+                   GatosServices.verFavorito(gato.getApiKey());
                    break;
                default:
                    break;

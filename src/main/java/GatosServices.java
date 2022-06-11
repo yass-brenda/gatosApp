@@ -98,4 +98,106 @@ public class GatosServices {
             System.out.println(e);
         }
     }
+
+    public static void verFavorito(String apiKey){
+        try {
+            OkHttpClient client =  new OkHttpClient();
+            Request request =  new Request.Builder()
+                    .url("https://api.thecatapi.com/v1/favourites")
+                    .get()
+                    .addHeader("Content-Type","application/json")
+                    .addHeader("x-api-key", apiKey)
+                    .build();
+            Response response = client.newCall(request).execute();
+
+            // Guardamos el string con la respuesta
+            String json = response.body().string();
+
+            // creamos el objeto gson
+            Gson gson = new Gson();
+            GatosFavoritos[] gatosArray = gson.fromJson(json,GatosFavoritos[].class);
+
+            if(gatosArray.length >0){
+                int min =  1;
+                int max  = gatosArray.length;
+                int aleatorio =  (int) (Math.random() * ((max-min)+1)) + min;
+                int indice = aleatorio -1;
+
+                GatosFavoritos gatosFav = gatosArray[indice];
+
+                Image image = null;
+                try {
+                    URL url = new URL(gatosFav.image.getUrl());
+                    image = ImageIO.read(url);
+
+                    ImageIcon fondoGato =  new ImageIcon(image);
+
+                    if(fondoGato.getIconWidth()>800){
+                        // redimensionamos la imagen
+                        Image fondo = fondoGato.getImage();
+                        Image modificada =  fondo.getScaledInstance(800,600, Image.SCALE_SMOOTH);
+                        fondoGato = new ImageIcon(modificada);
+                    }
+
+                    String menu = "Opciones \n"
+                            + "1. Ver Otra imagen \n"
+                            + "2. Eliminar Favoritos \n"
+                            + "3.Volver " +
+                            " \n";
+
+                    String [] botones = {"Ver otra imagen","Eliminar favorito", "Volver"};
+                    String id_gato = gatosFav.getId();
+                    String opciones = (String) JOptionPane.showInputDialog(null,
+                            menu,
+                            id_gato,
+                            JOptionPane.INFORMATION_MESSAGE,
+                            fondoGato,
+                            botones,
+                            botones[0]);
+
+
+                    int selecion = -1;
+                    for(int i=0;i< botones.length;i++){
+                        if(opciones.equals(botones[i])){
+                            selecion = i;
+                        }
+                    }
+
+                    switch (selecion){
+                        case 0:
+                            verFavorito(apiKey);
+                            break;
+                        case 1:
+                            borrarFavorito(gatosFav);
+                            break;
+                        default:
+                            break;
+                    }
+
+                }catch (IOException e){
+                    System.out.println("Ocurio un problema");
+                    System.out.println(e);
+                }
+
+            }
+
+        }catch (IOException e){
+            System.out.println(e);
+        }
+    }
+
+    public static  void borrarFavorito(GatosFavoritos gatofavorito){
+        try {
+            OkHttpClient client =  new OkHttpClient();
+            Request request =  new Request.Builder()
+                    .url("https://api.thecatapi.com/v1/favourites/"+gatofavorito.getId()+"")
+                    .delete(null)
+                    .addHeader("Content-Type","application/json")
+                    .addHeader("x-api-key", gatofavorito.getApiKey())
+                    .build();
+            Response response = client.newCall(request).execute();
+        }catch (IOException e){
+            System.out.println(e);
+        }
+    }
 }
