@@ -1,7 +1,8 @@
 import javax.swing.*;
+import java.io.IOException;
 
 public class Principal {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         int opcionMenu = -1;
         String[] botones = {"1. Ver gatos ", "2.Salir"};
 

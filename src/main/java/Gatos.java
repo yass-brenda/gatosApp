@@ -1,15 +1,15 @@
 public class Gatos {
-    private int id;
+    private String id;
     private String url;
     private String apiKey = "c154f849-b5df-4b5a-a721-df14505cdcfb";
     private String image;
 
 
-    public void setId(int id){
+    public void setId(String id){
         this.id = id;
     }
 
-    public int getId(){
+    public String getId(){
         return id;
     }
 
